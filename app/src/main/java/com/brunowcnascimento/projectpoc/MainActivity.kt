@@ -2,13 +2,14 @@ package com.brunowcnascimento.projectpoc
 
 import android.os.Bundle
 import android.widget.Toast
-import com.brunowcnascimento.projectpoc.common.CommonFontSizeActivity
+import androidx.core.content.ContextCompat.startActivity
+import com.brunowcnascimento.projectpoc.utils.common.CommonGenericActivity
 import com.brunowcnascimento.projectpoc.databinding.ActivityMainBinding
 import com.brunowcnascimento.projectpoc.feature.font_size.FontSizeFontSizeActivity
 import com.brunowcnascimento.projectpoc.setup_main.MainAdapter
 import com.brunowcnascimento.projectpoc.setup_main.MainRecyclerDomain
 
-class MainActivity : CommonFontSizeActivity() {
+class MainActivity : CommonGenericActivity() {
 
     private var binding: ActivityMainBinding? = null
     private var mainAdapter: MainAdapter? = null
@@ -22,7 +23,6 @@ class MainActivity : CommonFontSizeActivity() {
         setupRecyclerView()
 
         mainAdapter?.submitList(listActivities())
-
     }
 
 
@@ -55,7 +55,7 @@ class MainActivity : CommonFontSizeActivity() {
                 val intent = FontSizeFontSizeActivity.getIntent(this)
                 startActivity(intent)
             }
-            else -> Toast.makeText(this, "Activity não cadastrada", Toast.LENGTH_LONG).show()
+            else -> getToast("Activity não cadastrada").show()
         }
     }
 }

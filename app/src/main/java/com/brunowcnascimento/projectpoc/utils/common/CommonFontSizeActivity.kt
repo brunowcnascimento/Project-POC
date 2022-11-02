@@ -1,12 +1,13 @@
-package com.brunowcnascimento.projectpoc.common
+package com.brunowcnascimento.projectpoc.utils.common
 
 import android.content.Context
 import android.content.SharedPreferences
 import android.content.res.Configuration
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.brunowcnascimento.projectpoc.feature.font_size.setup.FontSizeManager
 
-abstract class CommonFontSizeActivity: AppCompatActivity() {
+abstract class CommonGenericActivity: AppCompatActivity() {
 
     var fontSizeManager: FontSizeManager? = null
 
@@ -19,6 +20,8 @@ abstract class CommonFontSizeActivity: AppCompatActivity() {
         applyOverrideConfiguration(newConfig)
         super.attachBaseContext(newBase)
     }
+
+    fun getToast(message: String) = Toast.makeText(this, message, Toast.LENGTH_LONG)
 
     private fun Context.prefs(): SharedPreferences = getSharedPreferences("your_prefs_name", Context.MODE_PRIVATE)
 }
