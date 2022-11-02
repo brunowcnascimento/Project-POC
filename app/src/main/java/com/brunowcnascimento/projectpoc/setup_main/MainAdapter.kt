@@ -10,7 +10,7 @@ import com.brunowcnascimento.projectpoc.databinding.RecyclerviewMainItemBinding
 
 class MainAdapter(
     private val itemClick: (nameActivity: String) -> Unit,
-) : ListAdapter<String, MainViewHolder>(diffCallback) {
+) : ListAdapter<MainRecyclerDomain, MainViewHolder>(diffCallback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MainViewHolder {
         val binding = RecyclerviewMainItemBinding.inflate(
@@ -22,10 +22,10 @@ class MainAdapter(
     }
 
     override fun onBindViewHolder(holder: MainViewHolder, position: Int) {
-        getItem(position).let { nameActivity ->
-            holder.bind(nameActivity)
+        getItem(position).let { activities ->
+            holder.bind(activities.name)
             holder.cardRecyclerMain.setOnClickListener {
-                itemClick(nameActivity)
+                itemClick(activities.className)
             }
         }
     }
@@ -41,17 +41,17 @@ class MainAdapter(
     }
 
     companion object {
-        private val diffCallback = object : DiffUtil.ItemCallback<String>() {
+        private val diffCallback = object : DiffUtil.ItemCallback<MainRecyclerDomain>() {
             override fun areItemsTheSame(
-                oldItem: String,
-                newItem: String,
+                oldItem: MainRecyclerDomain,
+                newItem: MainRecyclerDomain,
             ): Boolean {
-                return oldItem == newItem
+                return oldItem.name == newItem.name
             }
 
             override fun areContentsTheSame(
-                oldItem: String,
-                newItem: String,
+                oldItem: MainRecyclerDomain,
+                newItem: MainRecyclerDomain,
             ): Boolean {
                 return oldItem == newItem
             }
