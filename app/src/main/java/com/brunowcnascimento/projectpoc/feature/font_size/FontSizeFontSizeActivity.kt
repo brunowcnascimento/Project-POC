@@ -29,14 +29,6 @@ class FontSizeFontSizeActivity : CommonFontSizeActivity() {
         }
     }
 
-//    override fun attachBaseContext(newBase: Context) {
-//        fontSizeManager = FontSizeManager(newBase.prefs())
-//        val newConfig = Configuration(newBase.resources.configuration)
-//        newConfig.fontScale = fontSizeManager.fontSize.scale
-//        applyOverrideConfiguration(newConfig)
-//        super.attachBaseContext(newBase)
-//    }
-
     private fun updateFontSize(fontSize: FontSize) {
         fontSizeManager?.fontSize = fontSize
         recreate()

@@ -1,14 +1,14 @@
 package com.brunowcnascimento.projectpoc
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
+import com.brunowcnascimento.projectpoc.common.CommonFontSizeActivity
 import com.brunowcnascimento.projectpoc.databinding.ActivityMainBinding
 import com.brunowcnascimento.projectpoc.feature.font_size.FontSizeFontSizeActivity
 import com.brunowcnascimento.projectpoc.setup_main.MainAdapter
 import com.brunowcnascimento.projectpoc.setup_main.MainRecyclerDomain
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : CommonFontSizeActivity() {
 
     private var binding: ActivityMainBinding? = null
     private var mainAdapter: MainAdapter? = null
