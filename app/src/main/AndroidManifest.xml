@@ -14,7 +14,8 @@
         android:theme="@style/Theme.ProjectPOC"
         tools:targetApi="31">
         <activity
-            android:name=".FontSizeActivity"
+            android:name=".feature.font_size.FontSizeFontSizeActivity"
+            android:parentActivityName=".MainActivity"
             android:exported="false" />
         <activity
             android:name=".MainActivity"
