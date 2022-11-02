@@ -38,7 +38,7 @@ class FontSizeFontSizeActivity : CommonFontSizeActivity() {
 //    }
 
     private fun updateFontSize(fontSize: FontSize) {
-        fontSizeManager.fontSize = fontSize
+        fontSizeManager?.fontSize = fontSize
         recreate()
     }
 

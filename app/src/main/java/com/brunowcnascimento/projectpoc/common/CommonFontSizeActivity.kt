@@ -8,12 +8,14 @@ import com.brunowcnascimento.projectpoc.feature.font_size.setup.FontSizeManager
 
 abstract class CommonFontSizeActivity: AppCompatActivity() {
 
-    lateinit var fontSizeManager: FontSizeManager
+    var fontSizeManager: FontSizeManager? = null
 
     override fun attachBaseContext(newBase: Context) {
         fontSizeManager = FontSizeManager(newBase.prefs())
+        val safeFontSizeManager = fontSizeManager ?: return
+
         val newConfig = Configuration(newBase.resources.configuration)
-        newConfig.fontScale = fontSizeManager.fontSize.scale
+        newConfig.fontScale = safeFontSizeManager.fontSize.scale
         applyOverrideConfiguration(newConfig)
         super.attachBaseContext(newBase)
     }
