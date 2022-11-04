@@ -1,11 +1,15 @@
 package com.brunowcnascimento.projectpoc
 
+import android.content.Context
+import android.content.res.Configuration
 import android.os.Bundle
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat.startActivity
 import com.brunowcnascimento.projectpoc.utils.common.CommonGenericActivity
 import com.brunowcnascimento.projectpoc.databinding.ActivityMainBinding
 import com.brunowcnascimento.projectpoc.feature.font_size.FontSizeFontSizeActivity
+import com.brunowcnascimento.projectpoc.feature.font_size.setup.FontSizeManager
 import com.brunowcnascimento.projectpoc.setup_main.MainAdapter
 import com.brunowcnascimento.projectpoc.setup_main.MainRecyclerDomain
 
@@ -23,6 +27,13 @@ class MainActivity : CommonGenericActivity() {
         setupRecyclerView()
 
         mainAdapter?.submitList(listActivities())
+    }
+
+    override fun attachBaseContext(newBase: Context) {
+
+        val newConfig = Configuration(newBase.resources.configuration).fontScale
+        newConfig
+        super.attachBaseContext(newBase)
     }
 
 
@@ -55,7 +66,8 @@ class MainActivity : CommonGenericActivity() {
                 val intent = FontSizeFontSizeActivity.getIntent(this)
                 startActivity(intent)
             }
-            else -> getToast("Activity não cadastrada").show()
+//            else ->
+//                getToast("Activity não cadastrada").show()
         }
     }
 }
