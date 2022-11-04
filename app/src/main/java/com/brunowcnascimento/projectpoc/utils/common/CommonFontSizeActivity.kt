@@ -21,7 +21,7 @@ abstract class CommonGenericActivity: AppCompatActivity() {
         super.attachBaseContext(newBase)
     }
 
-    fun getToast(message: String) = Toast.makeText(this, message, Toast.LENGTH_LONG)
+        fun getToast(message: String) = Toast.makeText(this, message, Toast.LENGTH_SHORT)
 
     private fun Context.prefs(): SharedPreferences = getSharedPreferences("your_prefs_name", Context.MODE_PRIVATE)
 }
