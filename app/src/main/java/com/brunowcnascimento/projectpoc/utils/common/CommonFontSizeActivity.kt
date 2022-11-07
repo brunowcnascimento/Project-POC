@@ -16,7 +16,8 @@ abstract class CommonGenericActivity: AppCompatActivity() {
         val safeFontSizeManager = fontSizeManager ?: return
 
         val newConfig = Configuration(newBase.resources.configuration)
-        newConfig.fontScale = safeFontSizeManager.fontSize.scale
+        safeFontSizeManager.fontSizeSystem = newConfig.fontScale
+        newConfig.fontScale = safeFontSizeManager.fontSize
         applyOverrideConfiguration(newConfig)
         super.attachBaseContext(newBase)
     }

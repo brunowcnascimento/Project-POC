@@ -32,8 +32,16 @@ class FontSizeFontSizeActivity : CommonGenericActivity() {
             setupSeekBar()
             setupSwitch()
             setEnabledSeekBar()
-            textFontSize.text = getProgressIsPositionPrefs().toString()
+            setVisibilityText()
         }
+    }
+
+    private fun setVisibilityText() {
+        binding?.textFontSize?.text = if(getSwitchIsEnablePrefs()) {
+                getFontSize(getProgressIsPositionPrefs()).toString()
+            } else {
+                fontSizeManager?.fontSizeSystem.toString()
+            }
     }
 
     private fun setupSwitch() {
@@ -46,12 +54,12 @@ class FontSizeFontSizeActivity : CommonGenericActivity() {
                         .apply()
 
                     setEnabledSeekBar()
+                    if(!isChecked) updateFontSizeSystem() else getFontSizeByProgress(getProgressIsPositionPrefs())
                     getToast("Switch $isChecked").show()
                 }
+
             }
         }
-
-
     }
 
     private fun setEnabledSeekBar() {
@@ -72,7 +80,6 @@ class FontSizeFontSizeActivity : CommonGenericActivity() {
             seekbarFont.setOnSeekBarChangeListener(object : OnSeekBarChangeListener {
                 override fun onProgressChanged(seekBar: SeekBar?, progress: Int, p2: Boolean) {
                     mProgress = progress
-                    textFontSize.text = progress.toString()
                     prefsProgress.edit()
                         .putInt(PREFS_PROGRESS_IS_POSITION, progress)
                         .apply()
@@ -89,16 +96,29 @@ class FontSizeFontSizeActivity : CommonGenericActivity() {
         }
     }
 
-    private fun getFontSizeByProgress(progress: Int) {
-        when(progress) {
-            0 -> updateFontSize(FontSize.SMALL)
-            1 -> updateFontSize(FontSize.DEFAULT)
-            2 -> updateFontSize(FontSize.LARGE)
-            3 -> updateFontSize(FontSize.LARGEST)
+    private fun getFontSize(progress: Int): Float {
+        return when(progress) {
+            0 -> 0.7f
+            1 -> 1.0f
+            2 -> 1.3f
+            3 -> 1.6f
+            else -> 1.0f
         }
     }
 
-    private fun updateFontSize(fontSize: FontSize) {
+    private fun getFontSizeByProgress(progress: Int) {
+        updateFontSize(getFontSize(progress))
+    }
+
+    private fun updateFontSize(fontSize: Float) {
+        binding?.textFontSize?.text = fontSize.toString()
+        fontSizeManager?.fontSize = fontSize
+        recreate()
+    }
+
+    private fun updateFontSizeSystem() {
+        val fontSize = fontSizeManager?.fontSizeSystem ?: 1.0f
+        binding?.textFontSize?.text = fontSize.toString()
         fontSizeManager?.fontSize = fontSize
         recreate()
     }
