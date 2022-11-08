@@ -13,7 +13,11 @@ class FontSizeManager(private val prefs: SharedPreferences) {
             return if (scale == unsetFontSizeValue) {
                 1.0f
             } else {
-                FontSize.fontSizeList.first { fontSize -> fontSize == scale }
+                try {
+                    FontSize.fontSizeList.first { fontSize -> fontSize == scale }
+                } catch (e: Exception) {
+                    scale
+                }
             }
         }
         set(fontSize) {
