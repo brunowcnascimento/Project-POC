@@ -14,10 +14,14 @@ class FontSizeFontSizeActivity : CommonGenericActivity() {
 
     private var binding: ActivityFontSizeBinding? = null
     private var mProgress = 1
+
     private val prefsSwitch by lazy { getSwitchPrefs() }
     private val prefsProgress by lazy { getProgressPrefs() }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
+    private val switchIsEnabled by lazy { prefsSwitch.getBoolean(PREFS_SWITCH_IS_CHECKED, false) }
+    private val progressIsPosition by lazy { getProgressIsPositionPrefs() }
+
+        override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityFontSizeBinding.inflate(layoutInflater)
         val safeBinding = binding ?: return
@@ -37,7 +41,7 @@ class FontSizeFontSizeActivity : CommonGenericActivity() {
     }
 
     private fun setVisibilityText() {
-        binding?.textFontSize?.text = if(getSwitchIsEnablePrefs()) {
+        binding?.textFontSize?.text = if(switchIsEnabled) {
                 getFontSize(getProgressIsPositionPrefs()).toString()
             } else {
                 fontSizeManager?.fontSizeSystem.toString()
@@ -47,7 +51,7 @@ class FontSizeFontSizeActivity : CommonGenericActivity() {
     private fun setupSwitch() {
         binding?.apply {
             switchFont.apply {
-                isChecked = getSwitchIsEnablePrefs()
+                isChecked = switchIsEnabled
                 setOnClickListener {
                     prefsSwitch.edit()
                         .putBoolean(PREFS_SWITCH_IS_CHECKED, isChecked)
@@ -64,15 +68,9 @@ class FontSizeFontSizeActivity : CommonGenericActivity() {
 
     private fun setEnabledSeekBar() {
         binding?.apply {
-            seekbarFont.isEnabled = getSwitchIsEnablePrefs()
+            seekbarFont.isEnabled = switchIsEnabled
         }
     }
-
-    private fun getSwitchIsEnablePrefs() =
-        prefsSwitch.getBoolean(PREFS_SWITCH_IS_CHECKED, binding?.switchFont?.isChecked ?: false)
-
-    private fun getProgressIsPositionPrefs() =
-        prefsProgress.getInt(PREFS_PROGRESS_IS_POSITION, mProgress)
 
     private fun setupSeekBar() {
         binding?.apply {
@@ -122,6 +120,14 @@ class FontSizeFontSizeActivity : CommonGenericActivity() {
         fontSizeManager?.fontSize = fontSize
         recreate()
     }
+
+
+    private fun getSwitchIsEnablePrefs() =
+        prefsSwitch.getBoolean(PREFS_SWITCH_IS_CHECKED, false)
+
+    private fun getProgressIsPositionPrefs() =
+        prefsProgress.getInt(PREFS_PROGRESS_IS_POSITION, mProgress)
+
 
     companion object {
         const val PREFS_SWITCH = "PREFS_SWITCH"

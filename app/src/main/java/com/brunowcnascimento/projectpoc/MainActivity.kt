@@ -29,14 +29,6 @@ class MainActivity : CommonGenericActivity() {
         mainAdapter?.submitList(listActivities())
     }
 
-    override fun attachBaseContext(newBase: Context) {
-
-        val newConfig = Configuration(newBase.resources.configuration).fontScale
-        newConfig
-        super.attachBaseContext(newBase)
-    }
-
-
     private fun setupRecyclerView() {
         binding?.recyclerMain?.apply {
             setHasFixedSize(true)
