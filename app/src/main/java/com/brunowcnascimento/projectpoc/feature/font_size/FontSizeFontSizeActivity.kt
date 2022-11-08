@@ -14,8 +14,10 @@ class FontSizeFontSizeActivity : CommonGenericActivity() {
 
     private var binding: ActivityFontSizeBinding? = null
     private var mProgress = 1
+
     private val prefsSwitch by lazy { getSwitchPrefs() }
     private val prefsProgress by lazy { getProgressPrefs() }
+    private val prefsFontSize by lazy { getFontSizePrefs() }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,7 +40,7 @@ class FontSizeFontSizeActivity : CommonGenericActivity() {
 
     private fun setVisibilityText() {
         binding?.textFontSize?.text = if(getSwitchIsEnablePrefs()) {
-                getFontSize(getProgressIsPositionPrefs()).toString()
+            getCurrentFontSize().toString()
             } else {
                 fontSizeManager?.fontSizeSystem.toString()
             }
@@ -74,6 +76,9 @@ class FontSizeFontSizeActivity : CommonGenericActivity() {
     private fun getProgressIsPositionPrefs() =
         prefsProgress.getInt(PREFS_PROGRESS_IS_POSITION, mProgress)
 
+    private fun getCurrentFontSize() =
+        prefsFontSize.getFloat(PREFS_CURRENT_FONT_SIZE, FontSize.DEFAULT)
+
     private fun setupSeekBar() {
         binding?.apply {
             seekbarFont.progress = getProgressIsPositionPrefs()
@@ -90,7 +95,8 @@ class FontSizeFontSizeActivity : CommonGenericActivity() {
                 }
 
                 override fun onStopTrackingTouch(seekBar: SeekBar?) {
-                    getFontSizeByProgress(mProgress)
+                    val progress = seekBar?.progress ?: return
+                    getFontSizeByProgress(progress)
                 }
             })
         }
@@ -107,7 +113,11 @@ class FontSizeFontSizeActivity : CommonGenericActivity() {
     }
 
     private fun getFontSizeByProgress(progress: Int) {
-        updateFontSize(getFontSize(progress))
+        val fontSize = getFontSize(progress)
+        prefsFontSize.edit()
+            .putFloat(PREFS_CURRENT_FONT_SIZE, fontSize)
+            .apply()
+        updateFontSize(fontSize)
     }
 
     private fun updateFontSize(fontSize: Float) {
@@ -130,10 +140,14 @@ class FontSizeFontSizeActivity : CommonGenericActivity() {
         const val PREFS_PROGRESS = "PREFS_PROGRESS"
         const val PREFS_PROGRESS_IS_POSITION = "PREFS_PROGRESS_IS_POSITION"
 
+        const val PREFS_FONT_SIZE = "PREFS_FONT_SIZE"
+        const val PREFS_CURRENT_FONT_SIZE = "PREFS_CURRENT_FONT_SIZE"
+
         fun newInstance() = FontSizeFontSizeActivity()
         fun getIntent(context: Context) = Intent(context, FontSizeFontSizeActivity::class.java)
     }
 
     private fun getSwitchPrefs(): SharedPreferences = getSharedPreferences(PREFS_SWITCH, Context.MODE_PRIVATE)
     private fun getProgressPrefs(): SharedPreferences = getSharedPreferences(PREFS_PROGRESS, Context.MODE_PRIVATE)
+    private fun getFontSizePrefs(): SharedPreferences = getSharedPreferences(PREFS_FONT_SIZE, Context.MODE_PRIVATE)
 }
