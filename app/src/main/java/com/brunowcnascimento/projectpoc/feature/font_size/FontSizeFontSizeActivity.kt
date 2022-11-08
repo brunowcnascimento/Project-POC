@@ -28,11 +28,11 @@ class FontSizeFontSizeActivity : CommonGenericActivity() {
         val safeBinding = binding ?: return
         setContentView(safeBinding.root)
 
-        initalize()
+        initialize()
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
     }
 
-    private fun initalize() {
+    private fun initialize() {
         binding?.apply {
             setupSeekBar()
             setupSwitch()
