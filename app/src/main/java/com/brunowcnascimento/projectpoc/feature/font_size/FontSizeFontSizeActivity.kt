@@ -3,6 +3,7 @@ package com.brunowcnascimento.projectpoc.feature.font_size
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
+import android.content.res.Configuration
 import android.os.Bundle
 import android.widget.SeekBar
 import android.widget.SeekBar.OnSeekBarChangeListener
@@ -17,10 +18,14 @@ class FontSizeFontSizeActivity : CommonGenericActivity() {
 
     private val prefsSwitch by lazy { getSwitchPrefs() }
     private val prefsProgress by lazy { getProgressPrefs() }
+    private val prefsFontSizeToDisabledSwitch by lazy { getOldFontSizeSystem() }
+    private val prefsDiffFontSizeSystem by lazy { getDiffFontSizeSystem() }
 
     private val switchIsEnabled get() = prefsSwitch.getBoolean(PREFS_SWITCH_IS_CHECKED, false)
     private val currentPosition get() = prefsProgress.getInt(PREFS_PROGRESS_IS_POSITION, POSITION_DEFAULT)
     private val currentFontSize get() = FontSize.fontSizeList.getFontSizeByPosition(currentPosition)
+    private val oldFontSizeSystem get() = prefsFontSizeToDisabledSwitch.getFloat(PREFS_OLD_FONT_SIZE_SYSTEM, ERROR_FONT_SIZE)
+    private val diffFontSizeSystem get() = prefsDiffFontSizeSystem.getBoolean(PREFS_VALUE_DIFF_FONT_SIZE_SYSTEM, false)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,6 +44,11 @@ class FontSizeFontSizeActivity : CommonGenericActivity() {
             isEnabledSeekBar()
             setVisibilityText()
         }
+
+        val safeFontSize = fontSizeManager?.fontSizeSystem ?: ERROR_FONT_SIZE
+        prefsFontSizeToDisabledSwitch.edit()
+            .putFloat(PREFS_OLD_FONT_SIZE_SYSTEM, safeFontSize)
+            .apply()
     }
 
     private fun setVisibilityText() {
@@ -49,20 +59,54 @@ class FontSizeFontSizeActivity : CommonGenericActivity() {
         }
     }
 
+    override fun attachBaseContext(newBase: Context) {
+        super.attachBaseContext(newBase)
+
+        oldFontSizeSystem
+        val newFontSizeSystem = Configuration(newBase.resources.configuration).fontScale
+
+        when {
+            oldFontSizeSystem == ERROR_FONT_SIZE -> {  }
+            newFontSizeSystem == oldFontSizeSystem -> { }
+            newFontSizeSystem != oldFontSizeSystem -> {
+                verifyDiffFontSizeSystem(true)
+                getValueToPrefsSwitch(false)
+            }
+        }
+    }
+
+    private fun verifyDiffFontSizeSystem(isEnabled: Boolean) {
+        prefsDiffFontSizeSystem.edit()
+            .putBoolean(PREFS_VALUE_DIFF_FONT_SIZE_SYSTEM, isEnabled)
+            .apply()
+    }
+
     private fun setupSwitch() {
         binding?.apply {
             switchFont.apply {
                 isChecked = switchIsEnabled
                 setOnClickListener {
-                    prefsSwitch.edit()
-                        .putBoolean(PREFS_SWITCH_IS_CHECKED, isChecked)
-                        .apply()
+                    getValueToPrefsSwitch(isChecked)
                     verifySwitchIsEnabled()
                     getToast("Switch $isChecked").show()
                 }
-
             }
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if(diffFontSizeSystem) {
+            binding?.switchFont?.isChecked = false
+            verifyDiffFontSizeSystem(false)
+            recreate()
+        }
+    }
+
+    private fun getValueToPrefsSwitch(isEnabled: Boolean) {
+        prefsSwitch.edit()
+            .putBoolean(PREFS_SWITCH_IS_CHECKED, isEnabled)
+            .apply()
     }
 
     private fun setupSeekBar() {
@@ -105,10 +149,15 @@ class FontSizeFontSizeActivity : CommonGenericActivity() {
 
     companion object {
         private const val POSITION_DEFAULT = 1
+        private const val ERROR_FONT_SIZE = -1f
         const val PREFS_SWITCH = "PREFS_SWITCH"
         const val PREFS_SWITCH_IS_CHECKED = "PREFS_SWITCH_IS_CHECKED"
         const val PREFS_PROGRESS = "PREFS_PROGRESS"
         const val PREFS_PROGRESS_IS_POSITION = "PREFS_PROGRESS_IS_POSITION"
+        const val PREFS_FONT_SIZE_SYSTEM = "PREFS_FONT_SIZE_SYSTEM"
+        const val PREFS_OLD_FONT_SIZE_SYSTEM = "PREFS_OLD_FONT_SIZE_SYSTEM"
+        const val PREFS_DIFF_FONT_SIZE_SYSTEM = "PREFS_DIFF_FONT_SIZE_SYSTEM"
+        const val PREFS_VALUE_DIFF_FONT_SIZE_SYSTEM = "PREFS_VALUE_DIFF_FONT_SIZE_SYSTEM"
 
         fun newInstance() = FontSizeFontSizeActivity()
         fun getIntent(context: Context) = Intent(context, FontSizeFontSizeActivity::class.java)
@@ -119,4 +168,10 @@ class FontSizeFontSizeActivity : CommonGenericActivity() {
 
     private fun getProgressPrefs(): SharedPreferences =
         getSharedPreferences(PREFS_PROGRESS, Context.MODE_PRIVATE)
+
+    private fun getOldFontSizeSystem(): SharedPreferences =
+        getSharedPreferences(PREFS_FONT_SIZE_SYSTEM, Context.MODE_PRIVATE)
+
+    private fun getDiffFontSizeSystem(): SharedPreferences =
+        getSharedPreferences(PREFS_DIFF_FONT_SIZE_SYSTEM, Context.MODE_PRIVATE)
 }
