@@ -4,14 +4,13 @@ import android.content.SharedPreferences
 
 class FontSizeManager(private val prefs: SharedPreferences) {
 
-    private val unsetFontSizeValue = -1f
     var fontSizeSystem: Float = FontSize.DEFAULT
 
     var fontSize: Float
         get() {
-            val scale = prefs.getFloat("font_scale", unsetFontSizeValue)
-            return if (scale == unsetFontSizeValue) {
-                1.0f
+            val scale = prefs.getFloat("font_scale", UNSET_FONT_SIZE_VALUE)
+            return if (scale == UNSET_FONT_SIZE_VALUE) {
+                FontSize.DEFAULT
             } else {
                 try {
                     FontSize.fontSizeList.first { fontSize -> fontSize == scale }
@@ -26,4 +25,7 @@ class FontSizeManager(private val prefs: SharedPreferences) {
                 .apply()
         }
 
+    companion object {
+        private const val UNSET_FONT_SIZE_VALUE = -1f
+    }
 }
