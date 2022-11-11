@@ -59,22 +59,6 @@ class FontSizeFontSizeActivity : CommonGenericActivity() {
         }
     }
 
-    override fun attachBaseContext(newBase: Context) {
-        super.attachBaseContext(newBase)
-
-        oldFontSizeSystem
-        val newFontSizeSystem = Configuration(newBase.resources.configuration).fontScale
-
-        when {
-            oldFontSizeSystem == ERROR_FONT_SIZE -> {  }
-            newFontSizeSystem == oldFontSizeSystem -> { }
-            newFontSizeSystem != oldFontSizeSystem -> {
-                verifyDiffFontSizeSystem(true)
-                getValueToPrefsSwitch(false)
-            }
-        }
-    }
-
     private fun verifyDiffFontSizeSystem(isEnabled: Boolean) {
         prefsDiffFontSizeSystem.edit()
             .putBoolean(PREFS_VALUE_DIFF_FONT_SIZE_SYSTEM, isEnabled)
@@ -154,8 +138,7 @@ class FontSizeFontSizeActivity : CommonGenericActivity() {
         const val PREFS_SWITCH_IS_CHECKED = "PREFS_SWITCH_IS_CHECKED"
         const val PREFS_PROGRESS = "PREFS_PROGRESS"
         const val PREFS_PROGRESS_IS_POSITION = "PREFS_PROGRESS_IS_POSITION"
-        const val PREFS_FONT_SIZE_SYSTEM = "PREFS_FONT_SIZE_SYSTEM"
-        const val PREFS_OLD_FONT_SIZE_SYSTEM = "PREFS_OLD_FONT_SIZE_SYSTEM"
+
         const val PREFS_DIFF_FONT_SIZE_SYSTEM = "PREFS_DIFF_FONT_SIZE_SYSTEM"
         const val PREFS_VALUE_DIFF_FONT_SIZE_SYSTEM = "PREFS_VALUE_DIFF_FONT_SIZE_SYSTEM"
 
