@@ -6,24 +6,22 @@ import com.brunowcnascimento.projectpoc.utils.common.CommonGenericActivity.Compa
 class FontSizeManager(private val prefs: SharedPreferences, private val oldFontSizeSystem: SharedPreferences) {
 
     var fontSizeSystem: Float = FontSize.DEFAULT
+    var diff = false
 
     private fun oldFontSizeF() {
         val oldFontSize =  oldFontSizeSystem.getFloat(PREFS_OLD_FONT_SIZE_SYSTEM, UNSET_FONT_SIZE_VALUE)
 
-        if(oldFontSize == UNSET_FONT_SIZE_VALUE) {
-            oldFontSize
-            oldFontSizeSystem.edit()
-                .putFloat(PREFS_OLD_FONT_SIZE_SYSTEM, fontSizeSystem)
-                .apply()
-            // colocar a fonteSize atual
-            // reload == false
-        } else if(oldFontSize.compareTo(fontSizeSystem) == 0) {
-            oldFontSize
-            // reload == false
-        } else {
-            oldFontSize
-            // colocar a fonte size atual
-            // relogar trocando o switch para false
+        val condicao = oldFontSize.compare(fontSizeSystem)
+        when(condicao) {
+            0 -> {
+                diff = false
+            }
+            1 -> {
+                diff = true
+            }
+            -1 -> {
+                diff = false
+            }
         }
     }
 

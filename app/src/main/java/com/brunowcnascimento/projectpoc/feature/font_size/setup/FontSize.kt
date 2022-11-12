@@ -15,3 +15,17 @@ object FontSize {
 
     fun ArrayList<Float>.getFontSizeByPosition(position: Int) = this[position]
 }
+
+fun Float.compare(float: Float): Int {
+    return when {
+        this == -1f -> {
+            -1
+        }
+        this != float -> {
+            1
+        }
+        else -> {
+            0
+        }
+    }
+}
