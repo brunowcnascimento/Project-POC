@@ -3,13 +3,13 @@ package com.brunowcnascimento.projectpoc.feature.font_size
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
-import android.content.res.Configuration
 import android.os.Bundle
 import android.widget.SeekBar
 import android.widget.SeekBar.OnSeekBarChangeListener
 import com.brunowcnascimento.projectpoc.utils.common.CommonGenericActivity
 import com.brunowcnascimento.projectpoc.databinding.ActivityFontSizeBinding
 import com.brunowcnascimento.projectpoc.feature.font_size.setup.FontSize
+import com.brunowcnascimento.projectpoc.feature.font_size.setup.FontSize.UNSET_FONT_SIZE
 import com.brunowcnascimento.projectpoc.feature.font_size.setup.FontSize.getFontSizeByPosition
 
 class FontSizeFontSizeActivity : CommonGenericActivity() {
@@ -24,7 +24,6 @@ class FontSizeFontSizeActivity : CommonGenericActivity() {
     private val switchIsEnabled get() = prefsSwitch.getBoolean(PREFS_SWITCH_IS_CHECKED, false)
     private val currentPosition get() = prefsProgress.getInt(PREFS_PROGRESS_IS_POSITION, POSITION_DEFAULT)
     private val currentFontSize get() = FontSize.fontSizeList.getFontSizeByPosition(currentPosition)
-    private val oldFontSizeSystem get() = prefsFontSizeToDisabledSwitch.getFloat(PREFS_OLD_FONT_SIZE_SYSTEM, ERROR_FONT_SIZE)
     private val diffFontSizeSystem get() = prefsDiffFontSizeSystem.getBoolean(PREFS_VALUE_DIFF_FONT_SIZE_SYSTEM, false)
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -45,7 +44,7 @@ class FontSizeFontSizeActivity : CommonGenericActivity() {
             setVisibilityText()
         }
 
-        val safeFontSize = fontSizeManager?.fontSizeSystem ?: ERROR_FONT_SIZE
+        val safeFontSize = fontSizeManager?.fontSizeSystem ?: UNSET_FONT_SIZE
         prefsFontSizeToDisabledSwitch.edit()
             .putFloat(PREFS_OLD_FONT_SIZE_SYSTEM, safeFontSize)
             .apply()
@@ -72,7 +71,6 @@ class FontSizeFontSizeActivity : CommonGenericActivity() {
                 setOnClickListener {
                     getValueToPrefsSwitch(isChecked)
                     verifySwitchIsEnabled()
-                    getToast("Switch $isChecked").show()
                 }
             }
         }
@@ -133,9 +131,9 @@ class FontSizeFontSizeActivity : CommonGenericActivity() {
 
     companion object {
         private const val POSITION_DEFAULT = 1
-        private const val ERROR_FONT_SIZE = -1f
         const val PREFS_SWITCH = "PREFS_SWITCH"
         const val PREFS_SWITCH_IS_CHECKED = "PREFS_SWITCH_IS_CHECKED"
+
         const val PREFS_PROGRESS = "PREFS_PROGRESS"
         const val PREFS_PROGRESS_IS_POSITION = "PREFS_PROGRESS_IS_POSITION"
 

@@ -8,9 +8,9 @@ object FontSize {
     const val DEFAULT = 1.0f
     const val UNSET_FONT_SIZE = -1f
 
-    private const val EQUALS = 0
-    private const val DIFF = 1
-    private const val NO_VALUE = -1
+    const val EQUALS = 0
+    const val DIFF = 1
+    const val NO_VALUE = -1
 
     val fontSizeList = listOf(
         SMALL,
