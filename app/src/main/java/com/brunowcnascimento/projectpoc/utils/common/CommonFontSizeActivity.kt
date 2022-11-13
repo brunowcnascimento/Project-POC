@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.os.PersistableBundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.brunowcnascimento.projectpoc.feature.font_size.setup.FontSize
 import com.brunowcnascimento.projectpoc.feature.font_size.setup.FontSizeManager
 
 abstract class CommonGenericActivity : AppCompatActivity() {
@@ -41,6 +42,7 @@ abstract class CommonGenericActivity : AppCompatActivity() {
         val difference = fontSizeManager?.diff ?: false
         if (difference) {
             fontSizeManager?.diff = false
+            fontSizeManager?.fontSize = fontSizeManager?.fontSizeSystem ?: FontSize.DEFAULT
             recreate()
         }
     }
