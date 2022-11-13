@@ -1,7 +1,6 @@
 package com.brunowcnascimento.projectpoc.feature.font_size.setup
 
 import android.content.SharedPreferences
-import com.brunowcnascimento.projectpoc.utils.common.CommonGenericActivity.Companion.PREFS_FONT_SIZE_SYSTEM
 
 class FontSizeManager(private val prefs: SharedPreferences, private val oldFontSizeSystem: SharedPreferences) {
 
@@ -18,9 +17,11 @@ class FontSizeManager(private val prefs: SharedPreferences, private val oldFontS
             }
             1 -> {
                 diff = true
+                oldFontSizeSystem.edit().putFloat(PREFS_OLD_FONT_SIZE_SYSTEM, fontSizeSystem).apply()
             }
             -1 -> {
                 diff = false
+                oldFontSizeSystem.edit().putFloat(PREFS_OLD_FONT_SIZE_SYSTEM, fontSizeSystem).apply()
             }
         }
     }

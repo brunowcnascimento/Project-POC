@@ -7,7 +7,6 @@ import android.os.Bundle
 import android.os.PersistableBundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.brunowcnascimento.projectpoc.feature.font_size.FontSizeFontSizeActivity
 import com.brunowcnascimento.projectpoc.feature.font_size.setup.FontSizeManager
 
 abstract class CommonGenericActivity : AppCompatActivity() {
@@ -20,7 +19,6 @@ abstract class CommonGenericActivity : AppCompatActivity() {
         val safeFontSizeManager = fontSizeManager ?: return
 
         val newConfig = Configuration(newBase.resources.configuration)
-
         safeFontSizeManager.fontSizeSystem = newConfig.fontScale
         newConfig.fontScale = safeFontSizeManager.fontSize
 
@@ -37,16 +35,14 @@ abstract class CommonGenericActivity : AppCompatActivity() {
             ?.apply()
     }
 
-    private fun verifyFontSizeSystem() {
-        /*
-        fontSizeManager?.apply {
-        when {
-                oldFontSizeSystem == ERROR_FONT_SIZE -> {  }
-                fontSizeSystem == oldFontSizeSystem -> { }
-                fontSizeSystem != oldFontSizeSystem -> { }
-            }
+    override fun onResume() {
+        super.onResume()
+
+        val difference = fontSizeManager?.diff ?: false
+        if (difference) {
+            fontSizeManager?.diff = false
+            recreate()
         }
-         */
     }
 
     fun getToast(message: String) = Toast.makeText(this, message, Toast.LENGTH_SHORT)
