@@ -1,31 +1,32 @@
 package com.brunowcnascimento.projectpoc.feature.font_size.setup
 
 object FontSize {
-    const val SMALL = 0.7f
-    const val DEFAULT = 1.0f
-    const val LARGE = 1.3f
-    const val LARGEST = 1.6f
+    private const val SMALL = 0.7f
+    private const val LARGE = 1.3f
+    private const val LARGEST = 1.6f
 
-    val fontSizeList = arrayListOf(
+    const val DEFAULT = 1.0f
+    const val UNSET_FONT_SIZE = -1f
+
+    private const val EQUALS = 0
+    private const val DIFF = 1
+    private const val NO_VALUE = -1
+
+    val fontSizeList = listOf(
         SMALL,
         DEFAULT,
         LARGE,
         LARGEST
     )
 
-    fun ArrayList<Float>.getFontSizeByPosition(position: Int) = this[position]
-}
+    fun List<Float>.getFontSizeByPosition(position: Int) = this[position]
 
-fun Float.compare(float: Float): Int {
-    return when {
-        this == -1f -> {
-            -1
-        }
-        this != float -> {
-            1
-        }
-        else -> {
-            0
+    fun Float.compare(fontSize: Float): Int {
+        return when {
+            this == UNSET_FONT_SIZE -> NO_VALUE
+            this != fontSize -> DIFF
+            else -> EQUALS
         }
     }
 }
+
