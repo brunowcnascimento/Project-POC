@@ -19,12 +19,10 @@ class FontSizeFontSizeActivity : CommonGenericActivity() {
     private val prefsSwitch by lazy { getSwitchPrefs() }
     private val prefsProgress by lazy { getProgressPrefs() }
     private val prefsFontSizeToDisabledSwitch by lazy { getOldFontSizeSystem() }
-    private val prefsDiffFontSizeSystem by lazy { getDiffFontSizeSystem() }
 
     private val switchIsEnabled get() = prefsSwitch.getBoolean(PREFS_SWITCH_IS_CHECKED, false)
     private val currentPosition get() = prefsProgress.getInt(PREFS_PROGRESS_IS_POSITION, POSITION_DEFAULT)
     private val currentFontSize get() = FontSize.fontSizeList.getFontSizeByPosition(currentPosition)
-    private val diffFontSizeSystem get() = prefsDiffFontSizeSystem.getBoolean(PREFS_VALUE_DIFF_FONT_SIZE_SYSTEM, false)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,13 +35,26 @@ class FontSizeFontSizeActivity : CommonGenericActivity() {
     }
 
     private fun initialize() {
-        binding?.apply {
-            setupSeekBar()
-            setupSwitch()
-            isEnabledSeekBar()
-            setVisibilityText()
-        }
+        verifyIfHaveDiff()
+        setupSeekBar()
+        setupSwitch()
+        isEnabledSeekBar()
+        setVisibilityText()
+        savePrefsFontSize()
+    }
 
+    private fun verifyIfHaveDiff() {
+        val diff = fontSizeManager?.diff ?: false
+        if(diff) {
+            binding?.switchFont?.isChecked = false
+            getValueToPrefsSwitch(false)
+            recreate()
+        } else {
+            binding?.switchFont?.isChecked = switchIsEnabled
+        }
+    }
+
+    private fun savePrefsFontSize() {
         val safeFontSize = fontSizeManager?.fontSizeSystem ?: UNSET_FONT_SIZE
         prefsFontSizeToDisabledSwitch.edit()
             .putFloat(PREFS_OLD_FONT_SIZE_SYSTEM, safeFontSize)
@@ -58,12 +69,6 @@ class FontSizeFontSizeActivity : CommonGenericActivity() {
         }
     }
 
-    private fun verifyDiffFontSizeSystem(isEnabled: Boolean) {
-        prefsDiffFontSizeSystem.edit()
-            .putBoolean(PREFS_VALUE_DIFF_FONT_SIZE_SYSTEM, isEnabled)
-            .apply()
-    }
-
     private fun setupSwitch() {
         binding?.apply {
             switchFont.apply {
@@ -73,15 +78,6 @@ class FontSizeFontSizeActivity : CommonGenericActivity() {
                     verifySwitchIsEnabled()
                 }
             }
-        }
-    }
-
-    override fun onResume() {
-        super.onResume()
-        if(diffFontSizeSystem) {
-            binding?.switchFont?.isChecked = false
-            verifyDiffFontSizeSystem(false)
-            recreate()
         }
     }
 
@@ -152,7 +148,4 @@ class FontSizeFontSizeActivity : CommonGenericActivity() {
 
     private fun getOldFontSizeSystem(): SharedPreferences =
         getSharedPreferences(PREFS_FONT_SIZE_SYSTEM, Context.MODE_PRIVATE)
-
-    private fun getDiffFontSizeSystem(): SharedPreferences =
-        getSharedPreferences(PREFS_DIFF_FONT_SIZE_SYSTEM, Context.MODE_PRIVATE)
 }
